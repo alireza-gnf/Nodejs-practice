@@ -6,12 +6,11 @@
     "install-server": "npm install --prefix server",
     "install-client": "npm install --prefix client",
     "install": "npm install-server && npm install-client",
-    "server": "npm run start --prefix server",
     "server-dev": "npm run dev --prefix server",
-    "client": "npm start --prefix client",
+    "client-dev": "npm start --prefix client",
     "dev": "npm run server-dev & npm run client",
     "test": "npm run test --prefix server && npm run test --prefix client",
-    "build": "npm run build --prefix client"
+    "deploy": "npm run build --prefix client && npm run start --prefix server"
   },
   "keywords": [],
   "author": "",
