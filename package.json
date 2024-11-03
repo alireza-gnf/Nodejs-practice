@@ -8,7 +8,7 @@
     "install": "npm install-server && npm install-client",
     "server-dev": "npm run dev --prefix server",
     "client-dev": "npm start --prefix client",
-    "dev": "npm run server-dev & npm run client",
+    "dev": "npm run server-dev & npm run client-dev",
     "test": "npm run test --prefix server && npm run test --prefix client",
     "deploy": "npm run build --prefix client && npm run start --prefix server"
   },
