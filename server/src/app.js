@@ -14,21 +14,16 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   const start = Date.now();
-//   next();
-//   console.log(
-//     `${req.method} ${req.baseUrl}${req.url} - ${Date.now() - start}ms`
-//   );
-// });
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.use(morgan("combined"));
-
-app.use(express.static("public"));
 
 app.use(express.json());
 
 app.use("/planets", planetsRouter);
 app.use("/launches", launchesRouter);
+app.use("/*", (req, res) => {
+  return res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
 
 module.exports = app;
