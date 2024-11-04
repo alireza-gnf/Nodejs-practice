@@ -4,7 +4,7 @@ function httpGetAllLaunches(req, res) {
   return res.status(200).json(getAllLaunches());
 }
 
-function httpAddLaunch(req, res) {
+function httpAddLaunch(req, res, next) {
   const launch = req.body;
 
   if (
@@ -13,16 +13,12 @@ function httpAddLaunch(req, res) {
     !launch.target ||
     !launch.rocket
   ) {
-    return res.status(400).json({
-      error: "Missing required launch data",
-    });
+    return next(new Error("Missing required launch data"));
   }
 
   const launchDate = new Date(launch.launchDate);
   if (isNaN(launchDate) || new Date() >= launchDate) {
-    return res.status(400).json({
-      error: "Invalid launch date",
-    });
+    return next(new Error("Invalid launch date"));
   }
 
   const newLaunch = addLaunch({
