@@ -15,6 +15,15 @@ const launch = {
 
 launches.set(launch.flightNumber, launch);
 
+function existsLaunchById(id) {
+  return launches.has(id);
+}
+
+function isUpcomingLaunchById(id) {
+  const launch = launches.get(id);
+  return launch.upcoming;
+}
+
 function getAllLaunches() {
   return Array.from(launches.values());
 }
@@ -33,8 +42,18 @@ function addLaunch(launch) {
   return launches.get(_lastFlightNumber);
 }
 
+function abortLaunchById(id) {
+  const launch = launches.get(id);
+  launch.upcoming = false;
+  launch.success = false;
+
+  return launch;
+}
+
 module.exports = {
-  launches,
+  existsLaunchById,
+  isUpcomingLaunchById,
   getAllLaunches,
   addLaunch,
+  abortLaunchById,
 };

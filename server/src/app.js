@@ -35,7 +35,7 @@ app.use("/*", (req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(400).json({ error: err.message });
+  res.status(err.cause).json({ error: err.message });
 });
 
 module.exports = app;
