@@ -7,7 +7,7 @@ const launch = {
   mission: "Some Mission",
   rocket: "Some Rocket",
   launchDate: new Date("December 22, 2024"),
-  destination: "Kepler",
+  target: "Kepler",
   customers: ["Tapsi", "Snapp", "Digikala"],
   upcoming: true,
   success: true,
