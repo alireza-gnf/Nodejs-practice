@@ -34,7 +34,6 @@ app.use("/*", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err);
   res.status(err.cause).json({ error: err.message });
 });
 
