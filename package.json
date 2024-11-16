@@ -13,6 +13,9 @@
     "test-watch": "npm run test-watch --prefix server",
     "deploy": "npm run build --prefix client && npm run start --prefix server"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

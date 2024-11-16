@@ -1,59 +1,61 @@
-const launches = new Map();
+const launches = require("./launches.mongo");
+const planets = require("./planets.mongo");
 
-let _lastFlightNumber = 100;
+const DEFAULT_FLIGHT_NUMBER = 99;
 
-const launch = {
-  flightNumber: 100,
-  mission: "Some Mission",
-  rocket: "Some Rocket",
-  launchDate: new Date("December 22, 2024"),
-  target: "Kepler",
-  customers: ["Tapsi", "Snapp", "Digikala"],
-  upcoming: true,
-  success: true,
-};
-
-launches.set(launch.flightNumber, launch);
-
-function existsLaunchById(id) {
-  return launches.has(id);
+function getLaunchByFlightNumber(flightNumber) {
+  return launches.findOne({ flightNumber });
 }
 
-function isUpcomingLaunchById(id) {
-  const launch = launches.get(id);
-  return launch.upcoming;
+async function getAllLaunches() {
+  return await launches.find({}, { _id: 0, __v: 0 });
 }
 
-function getAllLaunches() {
-  return Array.from(launches.values());
+async function getLatestFlightNumber() {
+  const latestFlight = await launches.findOne().sort("-flightNumber");
+
+  return latestFlight ? latestFlight.flightNumber : DEFAULT_FLIGHT_NUMBER;
 }
 
-function addLaunch(launch) {
-  _lastFlightNumber++;
-  launches.set(
-    _lastFlightNumber,
-    Object.assign(launch, {
-      flightNumber: _lastFlightNumber,
-      upcoming: true,
-      success: true,
-      customers: ["Tapsi", "Snapp", "DigiKala"],
-    })
+async function saveLaunch(launch) {
+  await launches.findOneAndUpdate(
+    { flightNumber: launch.flightNumber },
+    launch,
+    { upsert: true }
   );
-  return launches.get(_lastFlightNumber);
-}
-
-function abortLaunchById(id) {
-  const launch = launches.get(id);
-  launch.upcoming = false;
-  launch.success = false;
 
   return launch;
 }
 
+async function scheduleNewLaunch(launch) {
+  const planet = await planets.findOne({ keplerName: launch.target });
+
+  if (!planet) throw new Error("No such planet was found");
+
+  return await saveLaunch({
+    ...launch,
+    flightNumber: (await getLatestFlightNumber()) + 1,
+    upcoming: true,
+    success: true,
+    customers: ["Tapsi", "Snapp", "DigiKala"],
+  });
+}
+
+async function abortLaunch(launch) {
+  const abortedLaunch = await launches.updateOne(
+    { flightNumber: launch.flightNumber },
+    {
+      upcoming: false,
+      success: false,
+    }
+  );
+
+  return abortedLaunch.modifiedCount === 1;
+}
+
 module.exports = {
-  existsLaunchById,
-  isUpcomingLaunchById,
+  getLaunchByFlightNumber,
   getAllLaunches,
-  addLaunch,
-  abortLaunchById,
+  scheduleNewLaunch,
+  abortLaunch,
 };

@@ -1,16 +1,15 @@
 const {
   getAllLaunches,
-  addLaunch,
-  existsLaunchById,
-  abortLaunchById,
-  isUpcomingLaunchById,
+  scheduleNewLaunch,
+  getLaunchByFlightNumber,
+  abortLaunch,
 } = require("../../models/launches.model");
 
-function httpGetAllLaunches(req, res) {
-  return res.status(200).json(getAllLaunches());
+async function httpGetAllLaunches(req, res) {
+  return res.status(200).json(await getAllLaunches());
 }
 
-function httpAddLaunch(req, res, next) {
+async function httpAddLaunch(req, res, next) {
   const launch = req.body;
 
   if (
@@ -27,24 +26,29 @@ function httpAddLaunch(req, res, next) {
     return next(new Error("Invalid launch date", { cause: 400 }));
   }
 
-  const newLaunch = addLaunch({
-    ...launch,
-    launchDate,
-  });
-  return res.status(201).json(newLaunch);
+  try {
+    const newLaunch = await scheduleNewLaunch({ ...launch, launchDate });
+    return res.status(201).json(newLaunch);
+  } catch (e) {
+    return next(e);
+  }
 }
 
-function httpAbortLaunch(req, res, next) {
-  const launchId = Number(req.params.id);
+async function httpAbortLaunch(req, res, next) {
+  const flightNumber = Number(req.params.id);
+  if (isNaN(flightNumber)) {
+    return next(new Error("Invalid flight number", { cause: 400 }));
+  }
 
-  if (!existsLaunchById(launchId) || !isUpcomingLaunchById(launchId)) {
+  const launch = await getLaunchByFlightNumber(flightNumber);
+  if (!launch || !launch.upcoming) {
     return next(
-      new Error("No upcoming launch with that ID was found", { cause: 404 })
+      new Error("No upcoming matching launch was found", { cause: 404 })
     );
   }
 
-  const abortedLaunch = abortLaunchById(launchId);
-  return res.status(200).json(abortedLaunch);
+  const isAborted = await abortLaunch(launch);
+  return res.status(200).json({ ok: isAborted });
 }
 
 module.exports = {
