@@ -5,8 +5,12 @@ const {
   abortLaunch,
 } = require("../../models/launches.model");
 
+const { getPaginationValues } = require("../../utils/pagination");
+
 async function httpGetAllLaunches(req, res) {
-  return res.status(200).json(await getAllLaunches());
+  const { skip, limit } = getPaginationValues(req.query);
+
+  return res.status(200).json(await getAllLaunches(skip, limit));
 }
 
 async function httpAddLaunch(req, res, next) {

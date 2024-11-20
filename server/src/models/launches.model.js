@@ -59,8 +59,11 @@ function getLaunchByFlightNumber(flightNumber) {
   return Launch.findOne({ flightNumber });
 }
 
-async function getAllLaunches() {
-  return await Launch.find({}, { _id: 0, __v: 0 });
+async function getAllLaunches(skip, limit) {
+  return await Launch.find({}, { _id: 0, __v: 0 })
+    .sort({ flightNumber: 1 })
+    .skip(skip)
+    .limit(limit);
 }
 
 async function getLatestFlightNumber() {
