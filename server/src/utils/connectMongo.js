@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/nasa";
-
 mongoose.connection.once("connected", () => console.log("Mongoose connected"));
 mongoose.connection.on("error", (err) => console.error(err));
 mongoose.connection.once("disconnected", () =>
@@ -9,7 +7,7 @@ mongoose.connection.once("disconnected", () =>
 );
 
 async function startMongoConnection() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(process.env.MONGO_URL);
 }
 
 async function closeMongoConnection() {
