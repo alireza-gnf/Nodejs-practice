@@ -3,11 +3,13 @@ const fs = require("fs");
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const helmet = require("helmet");
 
 const planetsRouter = require("./routes/planets/planets.router");
 const { launchesRouter } = require("./routes/launches/launches.router");
 
 const app = express();
+app.use(helmet());
 app.use(express.json());
 
 app.use(
