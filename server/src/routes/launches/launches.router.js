@@ -11,6 +11,4 @@ launchesRouter.get("/", httpGetAllLaunches);
 launchesRouter.post("/", httpAddLaunch);
 launchesRouter.delete("/:id", httpAbortLaunch);
 
-module.exports = {
-  launchesRouter,
-};
+module.exports = launchesRouter;
