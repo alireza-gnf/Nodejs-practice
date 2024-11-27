@@ -36,3 +36,4 @@ jobs:
       CLIENT_ID: ${{secrets.CLIENT_ID}}
       CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       SESSION_SECRET: ${{secrets.SESSION_SECRET}}
+      MONGO_URL: mongodb://localhost/nasa
