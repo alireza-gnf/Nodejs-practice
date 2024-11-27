@@ -33,3 +33,6 @@ jobs:
     env:
       CI: true
       ENV: test
+      CLIENT_ID: ${{secrets.CLIENT_ID}}
+      CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+      SESSION_SECRET: ${{secrets.SESSION_SECRET}}
