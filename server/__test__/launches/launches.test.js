@@ -4,10 +4,12 @@ const {
   startMongoConnection,
   closeMongoConnection,
 } = require("../../src/utils/connectMongo");
+const { loadPlanets } = require("../../src/models/planets.model");
 
 describe("Launches API", () => {
   beforeAll(async () => {
     await startMongoConnection();
+    await loadPlanets();
   });
 
   afterAll(async () => {
