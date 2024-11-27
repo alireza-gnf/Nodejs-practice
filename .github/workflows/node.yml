@@ -7,11 +7,29 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        mongodb-version: ["7.0", "8.0"]
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js version 20.16
+      - name: Github checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{matrix.node-version}}
         uses: actions/setup-node@v4
         with:
-          node-version: "20.16"
+          node-version: ${{matrix.node-version}}
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.11.0
+        with:
+          mongodb-version: ${{matrix.mongodb-version}}
+
       - run: npm install
+
       - run: npm run build --prefix client
+
+      - run: npm test
+    env:
+      CI: true
+      ENV: test

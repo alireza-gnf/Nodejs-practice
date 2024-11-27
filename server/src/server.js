@@ -1,7 +1,6 @@
 const fs = require("fs");
 const https = require("https");
 
-require("dotenv").config();
 const app = require("./app");
 const { startMongoConnection } = require("./utils/connectMongo");
 const { loadPlanets } = require("./models/planets.model");

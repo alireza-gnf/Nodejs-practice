@@ -1,3 +1,4 @@
+require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
 const express = require("express");
@@ -57,7 +58,7 @@ app.use("/*", authenticate, (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  res.json({ error: err.message });
+  res.status(err.cause).json({ error: err.message });
 });
 
 module.exports = app;

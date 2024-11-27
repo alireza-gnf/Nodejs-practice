@@ -39,6 +39,17 @@ describe("Launches API", () => {
       }).toMatchObject(payload);
     });
 
+    test("It should respond with 404 [Invalid planet]", async () => {
+      const response = await request(app)
+        .post(url)
+        .send({ ...payload, target: "WrongPlanet" })
+        .expect(404);
+
+      expect(response.body).toStrictEqual({
+        error: "No such planet was found",
+      });
+    });
+
     test("It should have upcoming set to true", async () => {
       const response = await request(app).post(url).send(payload).expect(201);
       expect({

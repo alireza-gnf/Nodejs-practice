@@ -5,8 +5,6 @@ const Planet = require("./planets.mongo");
 
 const DEFAULT_FLIGHT_NUMBER = 99;
 const SPACEX_LAUNCHES_URL = "https://api.spacexdata.com/v4/launches/query";
-const SPACEX_LATEST_LAUNCH_URL =
-  "https://api.spacexdata.com/v4/launches/latest";
 
 async function loadLaunches() {
   console.log("Downloading launches collection...");
@@ -83,7 +81,7 @@ async function saveLaunch(launch) {
 async function scheduleNewLaunch(launch) {
   const planet = await Planet.findOne({ keplerName: launch.target });
 
-  if (!planet) throw new Error("No such planet was found");
+  if (!planet) throw new Error("No such planet was found", { cause: 404 });
 
   return await saveLaunch({
     ...launch,
